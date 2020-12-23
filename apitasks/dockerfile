@@ -1,0 +1,20 @@
+FROM golang:1.15.6
+
+USER root
+LABEL maintainer = "Sergio Vera"
+WORKDIR /app
+RUN export GO111MODULE="on"
+COPY go.mod go.sum ./
+RUN ls
+# Ejecutamos los test del codigo que existan
+#RUN go test ./...
+# Descargamos las dependencias e instalamos (creamos ejecutable) del programa
+RUN go mod download 
+COPY . .
+RUN go build -o main
+RUN ls
+#RUN go get ./...
+#RUN go run main.go
+
+
+CMD [ "./main" ]
