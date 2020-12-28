@@ -11,7 +11,7 @@ func Open() (*sql.DB, error) {
 	host := "tcp(127.0.0.1:5003)"
 	nombreBaseDeDatos := "myTime"
 	// Debe tener la forma usuario:contraseña@host/nombreBaseDeDatos
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s/%s", usuario, pass, host, nombreBaseDeDatos))
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s/%s", usuario, pass, host, nombreBaseDeDatos)+"?parseTime=true")
 	if err != nil {
 		return nil, err
 	}

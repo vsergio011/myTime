@@ -1,13 +1,16 @@
 package models
 import (
 	"github.com/vsergio011/apitasks/database"
-	//"time"
+	"errors"
+	"time"
 )
+
+
 type Task struct {
-	Id  int 
+	Id  int64 
 	Title string
-	Date string
-	Id_user int
+	Date time.Time
+	Id_user int64
 }
 
 func GetTasks() ([]Task, error) {
@@ -36,3 +39,89 @@ func GetTasks() ([]Task, error) {
 
 	return tasks, nil
 }
+
+func GetTask(id int64) (*Task, error) {
+	sqlGetUserCredentials := `SELECT id,title,date,id_user FROM task WHERE id=?`
+	db, err := database.Open()
+	if err != nil {
+		return nil, errors.New("error opening the database")
+	}
+	defer db.Close()
+
+	var taskDB Task
+	err = db.QueryRow(sqlGetUserCredentials, id).Scan(&taskDB.Id, &taskDB.Title, &taskDB.Date, &taskDB.Id_user)
+	if err != nil {
+		return nil, errors.New("error executing query")
+	}
+
+	return &taskDB, nil
+}
+func GetTaskscreatedBy(id_user int64)([]Task, error) {
+	sql := `SELECT id,title,date,id_user FROM task WHERE id_user = ?`
+
+	db, err := database.Open()
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
+	var tasks []Task
+	rows, err := db.Query(sql,id_user)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var b Task
+		if err := rows.Scan(&b.Id, &b.Title, &b.Date, &b.Id_user); err != nil {
+			continue
+		}
+		tasks = append(tasks, b)
+	}
+
+	return tasks, nil
+}
+//Sin probar
+func insertTask(task *Task) error {
+	db, err := database.Open()
+	if err != nil {
+		return err
+	}
+	defer db.Close()
+
+	sqlInsertUser := `INSERT INTO task (id,title,date,id_user) VALUES (?, ?, ?, ?);`
+	stmt, err := db.Prepare(sqlInsertUser)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT")
+		return err
+	}
+
+	data, err := stmt.Exec(task.Id, task.Title, task.Date,task.Id_user)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT")
+		return err
+	}
+	task.Id, err = data.LastInsertId()
+	if err != nil {
+		err = errors.New("ERROR GETTING LAST ID INSERT")
+		return err
+	}
+
+	/*sqlInsertUserCredentials := `INSERT INTO users_credentials (user, password, id_user) VALUES (?, ?, ?);`
+	stmt, err = db.Prepare(sqlInsertUserCredentials)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT INSERT USER CREDENTIALS")
+		return err
+	}
+
+	data, err = stmt.Exec(signInUser.Username, signInUser.Password, signInUser.Id)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT INSERT USER CREDENTIALS")
+		return err
+	}*/
+
+	return nil
+}
+
+

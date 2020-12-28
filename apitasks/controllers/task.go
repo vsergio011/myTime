@@ -7,3 +7,11 @@ func GetTasks() ([]models.Task, error) {
 	
 	return models.GetTasks()
 }
+
+func GetTask(id int64)(*models.Task,error){
+	return models.GetTask(id)
+}
+func GetTasksCreatedBy(id int64) ([]models.Task, error) {
+	
+	return models.GetTaskscreatedBy(id)
+}
