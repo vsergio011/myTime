@@ -8,7 +8,7 @@ import (
 func Open() (*sql.DB, error) {
 	usuario := "dev-user"
 	pass := "dev-password"
-	host := "tcp(127.0.0.1:5003)"
+	host := "tcp(db:3306)"//"tcp(127.0.0.1:3306)"
 	nombreBaseDeDatos := "myTime"
 	// Debe tener la forma usuario:contraseña@host/nombreBaseDeDatos
 	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s/%s", usuario, pass, host, nombreBaseDeDatos)+"?parseTime=true")

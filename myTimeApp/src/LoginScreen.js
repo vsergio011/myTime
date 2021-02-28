@@ -1,10 +1,13 @@
 import React from 'react';
 import { StyleSheet, Text, View,Button } from 'react-native';
-import Login from './Components/Login/Login'
+//import Login from './Components/Login/Login'
+import Tryb from './Components/Tryb/Tryb'
+
+
 class LoginScreen extends React.Component {
   render() {
     return (
-      <Login/>
+      <Tryb/>
     );
   }
 }

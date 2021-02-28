@@ -36,6 +36,9 @@ renderItem(data) {
                 </View>
             </TouchableOpacity>
 }
+   onPressButton() {  
+        Alert.alert('You clicked the button!')  
+    }  
 render() {
     //Destruct pokeList and Loading from state.
     const { pokeList, loading } = this.state;

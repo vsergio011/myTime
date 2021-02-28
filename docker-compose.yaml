@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: Dockerfiledb
     ports:
-    - "5003:3306"
+    - "3306:3306"
     restart: always
 
   phpmyadmin:
@@ -13,12 +13,14 @@ services:
     ports:
     - "5001:80"
     restart: always
- # api:
-  #  container_name: 'apitasks'
-   # build: './apitasks'
-    #ports:
-     # - '8080:8080'
-    #depends_on:
-     #
-     # - 'mongo'
+  api:
+    container_name: 'apitasks'
+    build: './apitasks'
+    ports:
+      - '8080:8080'
+    volumes:
+      - ~/Documents/myTime/apitasks/routes:/app/routes
+    depends_on:
+     
+      - 'db'
  

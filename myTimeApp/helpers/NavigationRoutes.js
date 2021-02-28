@@ -6,6 +6,7 @@ import HomeScreen from '../src/HomeScreen';
 import FriendsScreen from '../src/FriendScreen';
 import LoginScreen from '../src/LoginScreen';
 
+
 const Stack = createStackNavigator();
 export class NavigationRoutes extends Component {
   render() {
