@@ -60,9 +60,9 @@ func New() Server {
 	apiRoutes.HandleFunc("/adduser", a.addUser).Methods("POST")
 	apiRoutes.HandleFunc("/getToken", a.getToken).Methods("get")
 	//Tasks routes
-	r.HandleFunc("/tasks", a.fetchTasks).Methods("get")
-	r.HandleFunc("/task/{id}", a.fetchTask).Methods("get")
-	r.HandleFunc("/taskscreatedby/{id}", a.fetchTasksCreatedBy).Methods("get")
+	apiRoutes.HandleFunc("/tasks", a.fetchTasks).Methods("get")
+	apiRoutes.HandleFunc("/task/{id}", a.fetchTask).Methods("get")
+	apiRoutes.HandleFunc("/taskscreatedby/{id}", a.fetchTasksCreatedBy).Methods("get")
 
 	a.router = r
 	return a
