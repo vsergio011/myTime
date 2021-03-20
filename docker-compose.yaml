@@ -20,6 +20,9 @@ services:
       - '8080:8080'
     volumes:
       - ~/Documents/myTime/apitasks/routes:/app/routes
+      - ~/Documents/myTime/apitasks/models:/app/models
+      - ~/Documents/myTime/apitasks/controllers:/app/controllers
+      - ~/Documents/myTime/apitasks/database:/app/database
     depends_on:
      
       - 'db'

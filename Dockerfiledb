@@ -9,4 +9,4 @@ ENV MYSQL_DATABASE myTime
 # Add the content of the sql-scripts/ directory to your image
 # All scripts in docker-entrypoint-initdb.d/ are automatically
 # executed during container startup
-COPY ./SQLDATABASE.sql /docker-entrypoint-initdb.d/
+COPY ./myTime.sql /docker-entrypoint-initdb.d/

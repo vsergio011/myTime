@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View,ScrollView  } from 'react-native';
-import { Avatar,Card,Text,Button,Rating, AirbnbRating} from "react-native-elements";
+import { Avatar,Card,Text,Button} from "react-native-elements";
 class HomeList extends React.Component {
   render() {
     return (
