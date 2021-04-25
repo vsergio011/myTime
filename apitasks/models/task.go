@@ -1,20 +1,21 @@
 package models
+
 import (
-	"github.com/vsergio011/apitasks/database"
 	"errors"
 	"time"
+
+	"github.com/vsergio011/apitasks/database"
 )
 
-
 type Task struct {
-	Id  int64 
-	Title string
-	Date time.Time
-	Id_user int64
+	Id       int64
+	Title    string
+	Date     time.Time
+	Uid_user string
 }
 
 func GetTasks() ([]Task, error) {
-	sql := `SELECT id,title,date,id_user FROM task`
+	sql := `SELECT id,title,date,uid_user FROM task`
 
 	db, err := database.Open()
 	if err != nil {
@@ -31,7 +32,7 @@ func GetTasks() ([]Task, error) {
 
 	for rows.Next() {
 		var b Task
-		if err := rows.Scan(&b.Id, &b.Title, &b.Date, &b.Id_user); err != nil {
+		if err := rows.Scan(&b.Id, &b.Title, &b.Date, &b.Uid_user); err != nil {
 			continue
 		}
 		tasks = append(tasks, b)
@@ -41,7 +42,7 @@ func GetTasks() ([]Task, error) {
 }
 
 func GetTask(id int64) (*Task, error) {
-	sqlGetUserCredentials := `SELECT id,title,date,id_user FROM task WHERE id=?`
+	sqlGetUserCredentials := `SELECT id,title,date,uid_user FROM task WHERE id=?`
 	db, err := database.Open()
 	if err != nil {
 		return nil, errors.New("error opening the database")
@@ -49,15 +50,15 @@ func GetTask(id int64) (*Task, error) {
 	defer db.Close()
 
 	var taskDB Task
-	err = db.QueryRow(sqlGetUserCredentials, id).Scan(&taskDB.Id, &taskDB.Title, &taskDB.Date, &taskDB.Id_user)
+	err = db.QueryRow(sqlGetUserCredentials, id).Scan(&taskDB.Id, &taskDB.Title, &taskDB.Date, &taskDB.Uid_user)
 	if err != nil {
 		return nil, errors.New("error executing query")
 	}
 
 	return &taskDB, nil
 }
-func GetTaskscreatedBy(id_user int64)([]Task, error) {
-	sql := `SELECT id,title,date,id_user FROM task WHERE id_user = ?`
+func GetTaskscreatedBy(uid_user string) ([]Task, error) {
+	sql := `SELECT id,title,date,uid_user FROM task WHERE id_user = ?`
 
 	db, err := database.Open()
 	if err != nil {
@@ -66,7 +67,7 @@ func GetTaskscreatedBy(id_user int64)([]Task, error) {
 	defer db.Close()
 
 	var tasks []Task
-	rows, err := db.Query(sql,id_user)
+	rows, err := db.Query(sql, uid_user)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +75,7 @@ func GetTaskscreatedBy(id_user int64)([]Task, error) {
 
 	for rows.Next() {
 		var b Task
-		if err := rows.Scan(&b.Id, &b.Title, &b.Date, &b.Id_user); err != nil {
+		if err := rows.Scan(&b.Id, &b.Title, &b.Date, &b.Uid_user); err != nil {
 			continue
 		}
 		tasks = append(tasks, b)
@@ -82,6 +83,7 @@ func GetTaskscreatedBy(id_user int64)([]Task, error) {
 
 	return tasks, nil
 }
+
 //Sin probar
 func insertTask(task *Task) error {
 	db, err := database.Open()
@@ -97,7 +99,7 @@ func insertTask(task *Task) error {
 		return err
 	}
 
-	data, err := stmt.Exec(task.Id, task.Title, task.Date,task.Id_user)
+	data, err := stmt.Exec(task.Id, task.Title, task.Date, task.Uid_user)
 	if err != nil {
 		err = errors.New("CANNOT PREPARE STATMENT")
 		return err
@@ -123,5 +125,3 @@ func insertTask(task *Task) error {
 
 	return nil
 }
-
-

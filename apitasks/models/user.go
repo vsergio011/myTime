@@ -2,14 +2,16 @@ package models
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"firebase.google.com/go/v4/auth"
 	"github.com/vsergio011/apitasks/database"
+	"google.golang.org/api/iterator"
 )
 
 type User struct {
-	Id          int
+	Id          string
 	Name        string
 	Surname     string
 	Email       string `json:"Email"`
@@ -17,6 +19,7 @@ type User struct {
 	Password    string
 	DisplayName string
 	Token       string
+	RawID       string `json:"rawId"`
 }
 
 /*type User struct {
@@ -39,8 +42,9 @@ type User struct {
 	} `json:"UserMetadata"`
 	TenantID string `json:"TenantID"`
 }*/
-//firebase function
-func GetUser(ctx context.Context, uid string) (*auth.UserRecord, error) {
+
+//*** CRUD USER **//
+func GetUser(ctx context.Context, uid string) (User, error) {
 
 	// [START get_user_golang]
 	// Get an auth client from the firebase.App
@@ -55,31 +59,56 @@ func GetUser(ctx context.Context, uid string) (*auth.UserRecord, error) {
 	if err != nil {
 		log.Fatalf("error getting user %s: %v\n", uid, err)
 	}
+	usr := User{
+		Id:          u.UID,
+		Name:        u.DisplayName,
+		Email:       u.Email,
+		PhoneNumber: u.PhoneNumber,
+	}
+
 	log.Printf("Successfully fetched user data: %v\n", u)
 	// [END get_user_golang]
 
-	return u, err
+	return usr, err
 }
 
-func GetUsers(ctx context.Context) (*auth.UserRecord, error) {
-	uid := "M1VXKsoMHqO9vMFZaREVSVKJxQX2"
-	// [START get_user_golang]
-	// Get an auth client from the firebase.App
+func GetUsers(ctx context.Context) ([]*auth.ExportedUserRecord, error) {
+	var users []*auth.ExportedUserRecord
 	var app = database.InitializeAppWithServiceAccount()
-
 	client, err := app.Auth(ctx)
-	if err != nil {
-		log.Fatalf("error getting Auth client: %v\n", err)
+	// Note, behind the scenes, the Users() iterator will retrive 1000 Users at a time through the API
+	/*iter := client.Users(ctx, "")
+	for {
+		user, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			log.Fatalf("error listing users: %s\n", err)
+		}
+		log.Printf("read user user: %v\n", user)
+	}*/
+
+	// Iterating by pages 100 users at a time.
+	// Note that using both the Next() function on an iterator and the NextPage()
+	// on a Pager wrapping that same iterator will result in an error.
+	pager := iterator.NewPager(client.Users(ctx, ""), 100, "")
+	for {
+
+		nextPageToken, err := pager.NextPage(&users)
+		if err != nil {
+			log.Fatalf("paging error %v\n", err)
+		}
+		for _, u := range users {
+			log.Printf("read user user: %v\n", u)
+
+		}
+		if nextPageToken == "" {
+			break
+		}
 	}
 
-	u, err := client.GetUser(ctx, uid)
-	if err != nil {
-		log.Fatalf("error getting user %s: %v\n", uid, err)
-	}
-	log.Printf("Successfully fetched user data: %v\n", u)
-	// [END get_user_golang]
-
-	return u, err
+	return users, err
 }
 
 func AddUser(ctx context.Context, user User) (*auth.UserRecord, error) {
@@ -97,35 +126,87 @@ func AddUser(ctx context.Context, user User) (*auth.UserRecord, error) {
 	if err != nil {
 		log.Fatalf("error creating user: %v\n", err)
 	}
-	log.Printf("Successfully created user: %v\n", u)
+	//una vez creado el usuario de autentificacion en firebase creamos una referencia del mismo en nuestra base de datos
+	db, err := database.Open()
+	if err != nil {
+		//error stament
+	}
+	defer db.Close()
+
+	sqlInsertUser := `INSERT INTO users (uid,name,surname,email) VALUES (?, ?, ?, ?);`
+	stmt, err := db.Prepare(sqlInsertUser)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT")
+	}
+
+	data, err := stmt.Exec(u.UID, u.DisplayName, "ss", u.Email)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT")
+	}
+
+	log.Printf("Successfully created user: %v\n %v", u, data)
 
 	return u, err
 }
 
-/*func GetUsers() ([]User, error) {
-	sql := `SELECT users.id, users.name,
-									 users.surname, users.email FROM users`
+func UpdateUser(ctx context.Context, user User, uid string) (*auth.UserRecord, error) {
+	var app = database.InitializeAppWithServiceAccount()
+	client, err := app.Auth(ctx)
+	params := (&auth.UserToUpdate{}).
+		Email(user.Email).
+		EmailVerified(true).
+		PhoneNumber(user.PhoneNumber).
+		Password(user.Password).
+		DisplayName(user.DisplayName).
+		PhotoURL("http://www.example.com/12345678/photo.png").
+		Disabled(false)
+	u, err := client.UpdateUser(ctx, uid, params)
+	if err != nil {
+		log.Fatalf("error updating user: %v\n", err)
+	}
+	log.Printf("Successfully updated user: %v\n", u)
 
+	return u, err
+}
+
+func RemoveUser(ctx context.Context, uid string) error {
+	var app = database.InitializeAppWithServiceAccount()
+	client, err := app.Auth(ctx)
+	err = client.DeleteUser(ctx, uid)
+	if err != nil {
+		log.Fatalf("error deleting user: %v\n", err)
+	}
+	//Eliminamos tambien la referencia en la base de datos propia
 	db, err := database.Open()
 	if err != nil {
-		return nil, err
+		//error stament
 	}
 	defer db.Close()
 
-	var users []User
-	rows, err := db.Query(sql)
+	sqlInsertUser := `DELETE FROM users WHERE uid = ?;`
+	stmt, err := db.Prepare(sqlInsertUser)
 	if err != nil {
-		return nil, err
+		err = errors.New("CANNOT PREPARE STATMENT")
 	}
-	defer rows.Close()
+	stmt.Exec(uid)
 
-	for rows.Next() {
-		var b User
-		if err := rows.Scan(&b.Id, &b.Name, &b.Surname, &b.Email); err != nil {
-			continue
-		}
-		users = append(users, b)
+	log.Printf("Successfully deleted user: %s\n ", uid)
+	return err
+
+}
+func RemoveUsers(ctx context.Context, uids []string) error {
+	var app = database.InitializeAppWithServiceAccount()
+	client, err := app.Auth(ctx)
+	deleteUsersResult, err := client.DeleteUsers(ctx, uids)
+	if err != nil {
+		log.Fatalf("error deleting users: %v\n", err)
 	}
 
-	return users, nil
-}*/
+	log.Printf("Successfully deleted %d users", deleteUsersResult.SuccessCount)
+	log.Printf("Failed to delete %d users", deleteUsersResult.FailureCount)
+	for _, err := range deleteUsersResult.Errors {
+		log.Printf("%v", err)
+	}
+	return err
+
+}

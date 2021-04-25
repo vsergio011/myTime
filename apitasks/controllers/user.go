@@ -9,17 +9,26 @@ import (
 	"github.com/vsergio011/apitasks/models"
 )
 
-func GetUser(ctx context.Context, uid string) (*auth.UserRecord, error) {
+func GetUser(ctx context.Context, uid string) (models.User, error) {
 
 	return models.GetUser(ctx, uid)
 }
 
-func GetUsers(ctx context.Context) (*auth.UserRecord, error) {
+func GetUsers(ctx context.Context) ([]*auth.ExportedUserRecord, error) {
 
 	return models.GetUsers(ctx)
 }
 func AddUser(ctx context.Context, user models.User) (*auth.UserRecord, error) {
 	return models.AddUser(ctx, user)
+}
+func RemoveUser(ctx context.Context, uid string) error {
+	return models.RemoveUser(ctx, uid)
+}
+func RemoveUsers(ctx context.Context, uids []string) error {
+	return models.RemoveUsers(ctx, uids)
+}
+func UpdateUser(ctx context.Context, user models.User, uid string) (*auth.UserRecord, error) {
+	return models.UpdateUser(ctx, user, uid)
 }
 
 func CreateToken(ctx context.Context) (string, error) {
