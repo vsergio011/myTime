@@ -20,10 +20,17 @@ type Server interface {
 func authmiddleware(siguienteManejador http.Handler) http.Handler {
 	return http.HandlerFunc(
 		func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Add("Content-Type", "application/json")
+			//Necessary for request cords
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Credentials", "true")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Access-Control-Allow-Origin, Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 			fmt.Println(r.Header.Get("Authorization"))
 			reqToken := r.Header.Get("Authorization")
 			splitToken := strings.Split(reqToken, "Bearer ")
 			reqToken = splitToken[1]
+			fmt.Println("Authorization ENDED")
 			data, err := controllers.VerifyToken(reqToken, r.Context())
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
@@ -42,6 +49,7 @@ func authmiddleware(siguienteManejador http.Handler) http.Handler {
 			} else {
 				// En caso de que sea permitida llamamos a siguienteManejador
 				// y le pasamos la respuesta con la petición
+
 				siguienteManejador.ServeHTTP(w, r)
 			}
 		})
@@ -69,8 +77,8 @@ func New() Server {
 	//rutas api
 	apiRoutes := r.PathPrefix("/api").Subrouter()
 	apiRoutes.Use(authmiddleware)
-	apiRoutes.HandleFunc("/users", a.fetchUsers).Methods("get")
-	apiRoutes.HandleFunc("/user/{ID:[a-zA-Z0-9_]+}", a.fetchUser).Methods("get")
+	apiRoutes.HandleFunc("/users", a.fetchUsers).Methods("get", "OPTIONS")
+	apiRoutes.HandleFunc("/user/{ID:[a-zA-Z0-9_]+}", a.fetchUser).Methods("get", "OPTIONS")
 	apiRoutes.HandleFunc("/adduser", a.addUser).Methods("POST")
 	apiRoutes.HandleFunc("/deluser/{ID:[a-zA-Z0-9_]+}", a.removeUser).Methods("get")
 	apiRoutes.HandleFunc("/getToken", a.getToken).Methods("get")
