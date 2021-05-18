@@ -33,6 +33,7 @@ export default class TutorialsList extends Component {
   }
 
   retrieveTutorials() {
+    console.log("get all")
     apiService.getAll()
       .then(response => {
         this.setState({
@@ -72,7 +73,7 @@ export default class TutorialsList extends Component {
   }
 
   searchTitle() {
-    apiService.findByTitle(this.state.searchTitle)
+    apiService.get(this.state.searchTitle)
       .then(response => {
         this.setState({
           tutorials: response.data

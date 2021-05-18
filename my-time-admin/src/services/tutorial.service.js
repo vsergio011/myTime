@@ -1,27 +1,78 @@
 import http from "../http-common";
-
+// Firebase App (the core Firebase SDK) is always required and must be listed first
+import firebase from "firebase/app";
+import "firebase/auth";
 class TutorialDataService {
+
+  
+  constructor(token){
+
+    firebase.initializeApp(firebaseConfig);
+    this.token = token
+  }
   getAll() {
-    const token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6IjRlOWRmNWE0ZjI4YWQwMjUwNjRkNjY1NTNiY2I5YjMzOTY4NWVmOTQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoibWluYW1lIiwicGljdHVyZSI6Imh0dHA6Ly93d3cuZXhhbXBsZS5jb20vMTIzNDU2NzgvcGhvdG8ucG5nIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL215dGltZS04MjI5MSIsImF1ZCI6Im15dGltZS04MjI5MSIsImF1dGhfdGltZSI6MTYxOTM2OTc4MiwidXNlcl9pZCI6Im5uYUdsa093OXVQSlZycWYxcHdwcHhPU1hPYzIiLCJzdWIiOiJubmFHbGtPdzl1UEpWcnFmMXB3cHB4T1NYT2MyIiwiaWF0IjoxNjE5MzY5NzgyLCJleHAiOjE2MTkzNzMzODIsImVtYWlsIjoibWllbWFpbEBnbWFsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV9udW1iZXIiOiIrMzQ2NTg0NTIzNjUiLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7InBob25lIjpbIiszNDY1ODQ1MjM2NSJdLCJlbWFpbCI6WyJtaWVtYWlsQGdtYWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.SXD0gS9AqtE6ma3IEsnUKOVfqUO65ucdj5jJmqZvgOlp3OXZbGKYeVKazDCaXY2OpsENNKNH6JfKharWOhhUfCT2yAFpUpM0mc3oOpu21sn04-Qv57uDt38SpYw339ZvvXnweCc8yFocyJTH2TD04yLj01E9ibu6WilU4ENRG1_NfY7t9d9xniV5UsXWQ3VGw34bcrd2PkmSlXiSmfQILiIi032ys3jUFwRLrSN0lUJ4C9g5orImJksb3wNuijYK6oS88tMfkpnkbWeiKfwm5oyuACT_a3za4YcUvE0gjmc331QoYkK_HMNeFhwuGAD6hyUzjlv8g6DxXWEGcvS6pA'
-    return http.get("/users",{ mode:'no-cors',headers: {"Authorization" : `Bearer ${token}`} });
+    const token = 'Bearer '+localStorage.token;
+    console.log("to"+token.length)
+    return http.get("/users",{ mode:'no-cors',headers: {"Authorization" : `${token}`} });
   }
 
   get(id) {
-    return http.get(`/user/${id}`,{
-        mode:'no-cors',
-        headers: {
-            'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IjRlOWRmNWE0ZjI4YWQwMjUwNjRkNjY1NTNiY2I5YjMzOTY4NWVmOTQiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoibWluYW1lIiwicGljdHVyZSI6Imh0dHA6Ly93d3cuZXhhbXBsZS5jb20vMTIzNDU2NzgvcGhvdG8ucG5nIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL215dGltZS04MjI5MSIsImF1ZCI6Im15dGltZS04MjI5MSIsImF1dGhfdGltZSI6MTYxOTM1NDkxNywidXNlcl9pZCI6Im5uYUdsa093OXVQSlZycWYxcHdwcHhPU1hPYzIiLCJzdWIiOiJubmFHbGtPdzl1UEpWcnFmMXB3cHB4T1NYT2MyIiwiaWF0IjoxNjE5MzU0OTE3LCJleHAiOjE2MTkzNTg1MTcsImVtYWlsIjoibWllbWFpbEBnbWFsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV9udW1iZXIiOiIrMzQ2NTg0NTIzNjUiLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7InBob25lIjpbIiszNDY1ODQ1MjM2NSJdLCJlbWFpbCI6WyJtaWVtYWlsQGdtYWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.m7gx7fs5Fy313oEOfdnjXPBDxCmv4KA0A9bqaPvwow93WFxmD_AHfNyHSB0bmkIak5-doVLBJ0AImxHLKLp3lN_o9ITDd_oPaddlbsI6pxna1rrxolZj4mpjaZjT8vIyshgR8oPYXvT-6s-dNqWta2CnhGe7cDHOYCI8Hkn0pv-Yz-YL3OeFI8AqIWGkE49oYlPjoMVhLhuuN2lpVZ2PoAH7Yxy0lMI51N3y-GDfcmjbxtD2T1xBHgpoz_G0GZg_9WwcydDK6tJrTOR50QXEdLqDD8QjcGrg5yruGSrHDvKP0nAMdVtv0G-Eu1NzI86vI9RinN-Jr_VqAtrz5-u_sQ' 
-          }
-    });
+    console.log("estoy aqui en el get")
+    if(localStorage.token){
+     
+    }
+    console.log()
+    const token = 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImNjM2Y0ZThiMmYxZDAyZjBlYTRiMWJkZGU1NWFkZDhiMDhiYzUzODYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoibWluYW1lIiwicGljdHVyZSI6Imh0dHA6Ly93d3cuZXhhbXBsZS5jb20vMTIzNDU2NzgvcGhvdG8ucG5nIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL215dGltZS04MjI5MSIsImF1ZCI6Im15dGltZS04MjI5MSIsImF1dGhfdGltZSI6MTYyMDEyMTM0NCwidXNlcl9pZCI6Im5uYUdsa093OXVQSlZycWYxcHdwcHhPU1hPYzIiLCJzdWIiOiJubmFHbGtPdzl1UEpWcnFmMXB3cHB4T1NYT2MyIiwiaWF0IjoxNjIwMTIxMzQ0LCJleHAiOjE2MjAxMjQ5NDQsImVtYWlsIjoibWllbWFpbEBnbWFsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV9udW1iZXIiOiIrMzQ2NTg0NTIzNjUiLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7InBob25lIjpbIiszNDY1ODQ1MjM2NSJdLCJlbWFpbCI6WyJtaWVtYWlsQGdtYWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.j9R_lJO5zh1WCgPXzpwhpl9kcYtHa81qD4n8s2JxNfTzucLmYPG2fSYUrVa14XxLGqaJE7HvsrwR1hOTnuhUj26PuqbVd3fQQIKi4O6_W1NEFd98Skpe2SS5OXNmbbVuNSJiMv-k7cKI8NtkYxeU68NSX3HIxrOyzbiQ5BkaoWGs1ZkHifT1JEL7dvLjcDMrYk2lGjtPNF_9ea79XwzbpQ3_buwZLv8bR525OmtPDrOqD6odKExYbjOyWUv491fL0J2lujrSK-DgQtWdUZ7vYX-9A_tg9kqLcp5E3EI7jZdH-b0zvb6B_IoGbiUpi2vwTVua0-9qtj1fe0DUmOBm4g'
+    const token2 = 'eyJhbGciOiJSUzI1NiIsImtpZCI6ImNjM2Y0ZThiMmYxZDAyZjBlYTRiMWJkZGU1NWFkZDhiMDhiYzUzODYiLCJ0eXAiOiJKV1QifQ.eyJuYW1lIjoibWluYW1lIiwicGljdHVyZSI6Imh0dHA6Ly93d3cuZXhhbXBsZS5jb20vMTIzNDU2NzgvcGhvdG8ucG5nIiwiaXNzIjoiaHR0cHM6Ly9zZWN1cmV0b2tlbi5nb29nbGUuY29tL215dGltZS04MjI5MSIsImF1ZCI6Im15dGltZS04MjI5MSIsImF1dGhfdGltZSI6MTYyMDIwNTkzNCwidXNlcl9pZCI6Im5uYUdsa093OXVQSlZycWYxcHdwcHhPU1hPYzIiLCJzdWIiOiJubmFHbGtPdzl1UEpWcnFmMXB3cHB4T1NYT2MyIiwiaWF0IjoxNjIwMjA1OTM0LCJleHAiOjE2MjAyMDk1MzQsImVtYWlsIjoibWllbWFpbEBnbWFsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaG9uZV9udW1iZXIiOiIrMzQ2NTg0NTIzNjUiLCJmaXJlYmFzZSI6eyJpZGVudGl0aWVzIjp7InBob25lIjpbIiszNDY1ODQ1MjM2NSJdLCJlbWFpbCI6WyJtaWVtYWlsQGdtYWwuY29tIl19LCJzaWduX2luX3Byb3ZpZGVyIjoicGFzc3dvcmQifX0.QifIVe6iLUmTNLaJU9TzWAdw-pOGiDkhVl8scezNVj5coHxbOndM85BIB66DlyvYMWNT9Xbx6I9tE0J2f0-TJi7tjMTRoNGXXaxNrE1Ei0XNNxoYeulY0_4vvpc4yRt3i7yV3NFi9F7GHKQT2RVmD_hVeMHuTTcylOT0OKWgS1LiO2mGXHi_A9F7q4rhk874vkwtoIkhjq2ZMPU6Gttk8QFFNxRY22murqk5zCzNWl2Rvk0W_9vkF6dwuDqQ1WvPKFozm-lbSeqsvZr6IyTvOXN-bFLIf9OcnBziajOVqF2X4jX000lAbRTx_X1JnmUqhpBrKgd0lfM4XExN8VB4Qw'
+    console.log(token.length+"  "+token2.length)
+    return http.get(`/user/${id}`,{ mode:'no-cors',headers: {"Authorization" : `Bearer ${token}`} });
   }
 
   create(data) {
     return http.post("/tutorials", data);
   }
   getkey(data) {
+    var email = data.email
+    var password = data.password
+
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Signed in
+      var user = userCredential.user;
+      return user.getIdToken(true).then(idToken => {
+        console.log('fire'+idToken.length)
+        localStorage.token = idToken;
+         this.getLoginUserInfo(data)
+      });
+      
+    })
+    .catch(function(error) {
+      // Handle Errors here.
+      console.log("estoy en el catch")
+      localStorage.token = "";
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      if (errorCode === 'auth/wrong-password') {
+        alert('Wrong password.');
+      } else {
+        alert(errorMessage);
+      }
+      console.log(error);
+    });
+
+    return this.getLoginUserInfo(data)
+  }
+  
+  getLoginUserInfo(data){
+    //encontrado el usuario se realiza una consulta al servicio go de los datos del usuario
+    this.token = "prueba"
+    console.log(this.token)
     return http.post("https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=AIzaSyDZD3Dyzt5ahIfnIWWkhqYF14UJn5EoP-g", {
+        headers:{
+          'Content-Type' : 'application/json; charset=UTF-8'
+        },
         email: 'miemail@gmal.com',
-        lastName: 'mipass'
+        password: 'mipass'
       });
   }
 
