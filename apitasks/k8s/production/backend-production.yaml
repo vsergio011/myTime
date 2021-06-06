@@ -33,7 +33,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: gcr.io/cloud-solutions-images/gceme:1.0.0
+        image: ../dockerfile
         resources:
           limits:
             memory: "500Mi"
