@@ -1,14 +1,29 @@
 version: '3.3'
 services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfiledb
+    ports:
+    - "3306:3306"
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+    - "5001:80"
+    restart: always
   api:
     container_name: 'apitasks'
     build: './apitasks'
     ports:
       - '8080:8080'
+    volumes:
+      - ~/Documents/myTime/apitasks/routes:/app/routes
+      - ~/Documents/myTime/apitasks/models:/app/models
+      - ~/Documents/myTime/apitasks/controllers:/app/controllers
+      - ~/Documents/myTime/apitasks/database:/app/database
     depends_on:
-      - 'mongo'
-  mongo:
-    image: 'mongo:latest'
-    container_name: 'mongo'
-    ports:
-      - '27017:27017'
+     
+      - 'db'
+ 
