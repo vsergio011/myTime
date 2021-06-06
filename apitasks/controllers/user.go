@@ -14,7 +14,7 @@ func GetUser(ctx context.Context, uid string) (models.User, error) {
 	return models.GetUser(ctx, uid)
 }
 
-func GetUsers(ctx context.Context) ([]*auth.ExportedUserRecord, error) {
+func GetUsers(ctx context.Context) ([]models.User, error) {
 
 	return models.GetUsers(ctx)
 }

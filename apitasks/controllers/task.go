@@ -16,3 +16,15 @@ func GetTasksCreatedBy(id string) ([]models.Task, error) {
 
 	return models.GetTaskscreatedBy(id)
 }
+
+func AddTask(task *models.Task) (*models.Task, error) {
+	return models.InsertTask(task)
+}
+
+func UpdateTask(task *models.Task) (*models.Task, error) {
+	return models.UpdateTask(task)
+}
+
+func DeleteTask(task *models.Task) (*models.Task, error) {
+	return models.DeleteTask(task)
+}

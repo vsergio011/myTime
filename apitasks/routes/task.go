@@ -8,6 +8,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/vsergio011/apitasks/controllers"
+	"github.com/vsergio011/apitasks/models"
 )
 
 func (a *api) fetchTasks(w http.ResponseWriter, r *http.Request) {
@@ -72,12 +73,63 @@ func (a *api) fetchTasksCreatedBy(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("ID PARAMTER WITH BAD FORMAT"))
 	}*/
 
-	data, err := controllers.GetTasksCreatedBy("prueba")
+	data, err := controllers.GetTasksCreatedBy(idHeader)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Something bad happened! [/task]"))
 	}
 
+	json.NewEncoder(w).Encode(data)
+
+}
+
+func (a *api) addTask(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("entro en el primero")
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Content-Type", "application/json")
+	var p *models.Task
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	data, err := controllers.AddTask(p)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
+
+}
+
+func (a *api) updateTask(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("entro en el primero")
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Content-Type", "application/json")
+	var p *models.Task
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	data, err := controllers.UpdateTask(p)
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(data)
+
+}
+
+func (a *api) deleteTask(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("entro en el primero")
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Content-Type", "application/json")
+	var p *models.Task
+	err := json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	data, err := controllers.DeleteTask(p)
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(data)
 
 }

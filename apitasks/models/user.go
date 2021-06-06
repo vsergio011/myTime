@@ -59,11 +59,37 @@ func GetUser(ctx context.Context, uid string) (User, error) {
 	if err != nil {
 		log.Fatalf("error getting user %s: %v\n", uid, err)
 	}
+
 	usr := User{
 		Id:          u.UID,
+		Surname:     "",
 		Name:        u.DisplayName,
 		Email:       u.Email,
 		PhoneNumber: u.PhoneNumber,
+	}
+
+	//realizo la consulta en la base de datos propia
+	db, err := database.Open()
+	if err != nil {
+		//error stament
+	}
+	defer db.Close()
+
+	rows, err := db.Query("SELECT uid,name,surname FROM users where uid = ?", u.UID)
+	if err != nil {
+		err = errors.New("CANNOT PREPARE STATMENT")
+	}
+	defer rows.Close()
+	for rows.Next() {
+		err := rows.Scan(&usr.Id, &usr.Name, &usr.Surname)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(usr.Id, usr.Name, usr.Surname)
+	}
+	err = rows.Err()
+	if err != nil {
+		log.Fatal(err)
 	}
 
 	log.Printf("Successfully fetched user data: %v\n", u)
@@ -72,8 +98,9 @@ func GetUser(ctx context.Context, uid string) (User, error) {
 	return usr, err
 }
 
-func GetUsers(ctx context.Context) ([]*auth.ExportedUserRecord, error) {
+func GetUsers(ctx context.Context) ([]User, error) {
 	var users []*auth.ExportedUserRecord
+	var userq []User
 	var app = database.InitializeAppWithServiceAccount()
 	client, err := app.Auth(ctx)
 	// Note, behind the scenes, the Users() iterator will retrive 1000 Users at a time through the API
@@ -100,7 +127,38 @@ func GetUsers(ctx context.Context) ([]*auth.ExportedUserRecord, error) {
 			log.Fatalf("paging error %v\n", err)
 		}
 		for _, u := range users {
+			usr := User{
+				Id:          u.UID,
+				Surname:     "",
+				Name:        u.DisplayName,
+				Email:       u.Email,
+				PhoneNumber: u.PhoneNumber,
+			}
 			log.Printf("read user user: %v\n", u)
+			//realizo la consulta en la base de datos propia
+			db, err := database.Open()
+			if err != nil {
+				//error stament
+			}
+			defer db.Close()
+
+			rows, err := db.Query("SELECT uid,name,surname FROM users where uid = ?", u.UID)
+			if err != nil {
+				err = errors.New("CANNOT PREPARE STATMENT")
+			}
+			defer rows.Close()
+			for rows.Next() {
+				err := rows.Scan(&usr.Id, &usr.Name, &usr.Surname)
+				if err != nil {
+					log.Fatal(err)
+				}
+				log.Println(usr.Id, usr.Name, usr.Surname)
+			}
+			err = rows.Err()
+			if err != nil {
+				log.Fatal(err)
+			}
+			userq = append(userq, usr)
 
 		}
 		if nextPageToken == "" {
@@ -108,7 +166,7 @@ func GetUsers(ctx context.Context) ([]*auth.ExportedUserRecord, error) {
 		}
 	}
 
-	return users, err
+	return userq, err
 }
 
 func AddUser(ctx context.Context, user User) (*auth.UserRecord, error) {
