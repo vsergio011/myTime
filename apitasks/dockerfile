@@ -1,7 +1,8 @@
 FROM golang:1.15.6
 
-USER root
 LABEL maintainer = "Sergio Vera"
+RUN mkdir /app
+ADD . /app
 WORKDIR /app
 RUN export GO111MODULE="on"
 COPY go.mod go.sum ./
@@ -17,4 +18,4 @@ RUN ls
 #RUN go run main.go
 
 
-CMD [ "./main" ]
+CMD [ "/app/main" ]

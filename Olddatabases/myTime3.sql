@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 11, 2021 at 08:59 AM
+-- Generation Time: May 20, 2021 at 08:29 PM
 -- Server version: 5.7.33
 -- PHP Version: 7.4.15
 
@@ -87,7 +87,36 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `title`, `date`, `uid_user`, `place`) VALUES
-(58, 'cita 1', '2021-05-03 11:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1);
+(1, 'Example task', '2021-02-28 15:00:17', 'nnaGlkOw9uPJVrqf1pwppxOSXOc2', 1),
+(2, 'Example task2 update', '2021-02-01 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(3, 'Example task3', '2021-02-28 15:00:17', 'nnaGlkOw9uPJVrqf1pwppxOSXOc2', 1),
+(4, 'Example task4', '2021-02-28 15:00:17', 'nnaGlkOw9uPJVrqf1pwppxOSXOc2', 1),
+(5, 'Example task2', '2021-02-28 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(6, 'Example task6', '2021-02-28 15:00:17', 'nnaGlkOw9uPJVrqf1pwppxOSXOc2', 1),
+(7, 'Example task2 update', '2021-02-28 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(8, 'Example taskpostman', '2021-05-20 18:31:04', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(9, 'Example taddskpostman', '2021-05-20 18:31:43', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(10, 'Example taddskpostman', '2021-05-20 18:31:56', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(11, 'Example taddskpostman', '2021-05-20 18:39:36', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(12, 'Example new', '2021-05-20 18:31:56', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(13, 'Example new', '2025-05-20 18:31:56', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(14, 'Example new', '2029-05-20 18:31:56', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(15, 'Example new', '2029-05-20 18:31:56', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(16, 'Example new', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(17, 'Example new', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(18, 'Example new', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(19, 'Example new', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(20, 'pruebaapp', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(21, 'pruebaapp', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(22, 'pruebaapp', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(23, 'Example task2sdd', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(24, 'Example task5', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(25, 'Example task5', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(26, 'Example task5', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(27, 'Example task5', '2021-02-28 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(28, 'Example task223234234', '2021-02-26 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(29, 'Example new', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1),
+(30, 'Example new', '2029-05-20 00:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1);
 
 -- --------------------------------------------------------
 
@@ -165,7 +194,7 @@ ALTER TABLE `place`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- Constraints for dumped tables

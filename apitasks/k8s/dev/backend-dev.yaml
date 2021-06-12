@@ -11,39 +11,31 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gceme-backend-dev
+  name: go-api
 spec:
   replicas: 1
   selector:
       matchLabels:
-          app: gceme
+          app: go-api
           role: backend
           env: dev
   template:
     metadata:
       name: backend
       labels:
-        app: gceme
+        app: go-api
         role: backend
         env: dev
     spec:
       containers:
       - name: backend
-        image: ./dockerfile
-        resources:
-          limits:
-            memory: "500Mi"
-            cpu: "100m"
-        imagePullPolicy: Always
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-        command: ["sh", "-c", "app -port=8080"]
+        image: sergiov0011/mytimeapi
+        imagePullPolicy: IfNotPresent
         ports:
         - name: backend
           containerPort: 8080
+
+

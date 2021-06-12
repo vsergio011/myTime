@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Jun 11, 2021 at 08:59 AM
+-- Generation Time: Apr 01, 2021 at 06:27 PM
 -- Server version: 5.7.33
 -- PHP Version: 7.4.15
 
@@ -77,7 +77,7 @@ INSERT INTO `place` (`id`, `phone`, `company`, `address`) VALUES
 CREATE TABLE `task` (
   `id` int(20) NOT NULL,
   `title` varchar(40) NOT NULL,
-  `date` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `date` datetime NOT NULL,
   `uid_user` varchar(50) NOT NULL,
   `place` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -87,7 +87,7 @@ CREATE TABLE `task` (
 --
 
 INSERT INTO `task` (`id`, `title`, `date`, `uid_user`, `place`) VALUES
-(58, 'cita 1', '2021-05-03 11:00:00', 'M1VXKsoMHqO9vMFZaREVSVKJxQX2', 1);
+(1, 'Example task', '2021-02-28 15:00:17', 'UIDOO', 1);
 
 -- --------------------------------------------------------
 
@@ -107,10 +107,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`uid`, `name`, `surname`, `email`) VALUES
-('frKvD1aaITa9aZkuod4SDcjsjQj2', 'displayname2', 'ss', 'miemailnuevo@vera.com'),
 ('M1VXKsoMHqO9vMFZaREVSVKJxQX2', 'sergio', 'surnanme', 'sergiov0011@gmail.com'),
-('nnaGlkOw9uPJVrqf1pwppxOSXOc2', 'miname', 'ss', 'miemail@gmal.com'),
-('UIDOO', 'bruce', 'surnameprueba', 'prueba@gmail');
+('UIDOO', 'prueba', 'prueba', 'prueba@gmail');
 
 --
 -- Indexes for dumped tables
@@ -165,7 +163,7 @@ ALTER TABLE `place`
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables

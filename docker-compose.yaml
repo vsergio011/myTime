@@ -1,13 +1,12 @@
 version: '3.3'
 services:
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfiledb
-    ports:
-    - "3306:3306"
-    restart: always
-
+ # db:
+  #  build:
+   #   context: .
+    #  dockerfile: Dockerfiledb
+   # ports:
+    #- "3306:3306"
+    #restart: always
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
     ports:
@@ -23,7 +22,16 @@ services:
       - ~/Documents/myTime/apitasks/models:/app/models
       - ~/Documents/myTime/apitasks/controllers:/app/controllers
       - ~/Documents/myTime/apitasks/database:/app/database
-    depends_on:
-     
-      - 'db'
+  
+  front:
+      container_name: 'front'
+      build: './my-time-admin'
+      ports:
+        - '3000:3000'
+      volumes:
+        - './services/client:/usr/src/app'
+        - '/usr/src/app/node_modules'
+      depends_on:
+      
+        - 'api'
  

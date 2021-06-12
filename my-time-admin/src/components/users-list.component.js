@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import apiService from "../services/tutorial.service";
+import apiService from "../services/tasks.service";
 import { Link } from "react-router-dom";
-
-export default class TutorialsList extends Component {
+import ModalForm from './ModalForm';
+export default class UsersList extends Component {
   constructor(props) {
     super(props);
     this.onChangeSearchTitle = this.onChangeSearchTitle.bind(this);
@@ -13,13 +13,15 @@ export default class TutorialsList extends Component {
     this.searchTitle = this.searchTitle.bind(this);
 
     this.state = {
-      tutorials: [],
-      currentTutorial: null,
+      ListUsers: [],
+      currentUser: null,
       currentIndex: -1,
-      searchTitle: ""
+      searchTitle: "",
+      isOpen: false
     };
   }
-
+  openModal = () => this.setState({ isOpen: true });
+  closeModal = () => this.setState({ isOpen: false });
   componentDidMount() {
     this.retrieveTutorials();
   }
@@ -37,7 +39,7 @@ export default class TutorialsList extends Component {
     apiService.getAll()
       .then(response => {
         this.setState({
-          tutorials: response.data
+          ListUsers: response.data
         });
         console.log(response.data);
       })
@@ -49,14 +51,14 @@ export default class TutorialsList extends Component {
   refreshList() {
     this.retrieveTutorials();
     this.setState({
-      currentTutorial: null,
+      currentUser: null,
       currentIndex: -1
     });
   }
 
-  setActiveTutorial(tutorial, index) {
+  setActiveTutorial(user, index) {
     this.setState({
-      currentTutorial: tutorial,
+      currentUser: user,
       currentIndex: index
     });
   }
@@ -72,11 +74,16 @@ export default class TutorialsList extends Component {
       });
   }
 
+  citasUser(usuario) {
+    this.openModal()
+    console.log(usuario)
+  }
+
   searchTitle() {
     apiService.get(this.state.searchTitle)
       .then(response => {
         this.setState({
-          tutorials: response.data
+          ListUsers: response.data
         });
         console.log(response.data);
       })
@@ -85,8 +92,12 @@ export default class TutorialsList extends Component {
       });
   }
 
+  goToAddTask(userID){
+    window.location.href = "/add/"+userID
+  }
+
   render() {
-    const { searchTitle, tutorials, currentTutorial, currentIndex } = this.state;
+    const { searchTitle, ListUsers, currentUser, currentIndex } = this.state;
 
     return (
       <div className="list row">
@@ -111,56 +122,67 @@ export default class TutorialsList extends Component {
           </div>
         </div>
         <div className="col-md-6">
-          <h4>Tutorials List</h4>
+          <h4>Users</h4>
 
           <ul className="list-group">
-            {tutorials &&
-              tutorials.map((tutorial, index) => (
+            {ListUsers &&
+              ListUsers.map((user, index) => (
                 <li
                   className={
                     "list-group-item " +
                     (index === currentIndex ? "active" : "")
                   }
-                  onClick={() => this.setActiveTutorial(tutorial, index)}
+                  onClick={() => this.setActiveTutorial(user, index)}
                   key={index}
                 >
-                  {tutorial.email}
+                  {user.Email}
                 </li>
               ))}
           </ul>
 
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllTutorials}
-          >
-            Remove All
-          </button>
+                
         </div>
         <div className="col-md-6">
-          {currentTutorial ? (
+          {currentUser ? (
             <div>
-              <h4>Tutorial</h4>
+              <h4>User</h4>
               <div>
                 <label>
-                  <strong>Title:</strong>
+                  <strong>Nombre:</strong>
                 </label>{" "}
-                {currentTutorial.email}
+                {currentUser.Name}
+              </div>
+
+              <div>
+                <label>
+                  <strong>Email:</strong>
+                </label>{" "}
+                {currentUser.Email}
               </div>
               <div>
                 <label>
-                  <strong>Description:</strong>
+                  <strong>Telefono:</strong>
                 </label>{" "}
-                {currentTutorial.description}
+                {currentUser.PhoneNumber}
+                
               </div>
+
               <div>
                 <label>
-                  <strong>Status:</strong>
+                  <strong>Activo:</strong>
                 </label>{" "}
-                {currentTutorial.published ? "Published" : "Pending"}
+                {currentUser.activo ? "activo" : "activo"}
+              </div>
+              <div>
+                <button className="m-3 btn btn-sm btn-primary" onClick={this.citasUser.bind(this,currentUser.Email)}>Citas</button>
+              </div>
+
+              <div>
+                <button type="button" onClick={this.goToAddTask.bind(this,currentUser.Id)} class="btn btn-warning buttons1" >Añadir task</button>
               </div>
 
               <Link
-                to={"/tutorials/" + currentTutorial.id}
+                to={"/tutorials/" + currentUser.id}
                 className="badge badge-warning"
               >
                 Edit
@@ -169,10 +191,21 @@ export default class TutorialsList extends Component {
           ) : (
             <div>
               <br />
-              <p>Please click on a Tutorial...</p>
+              <p>Please click on a User...</p>
             </div>
           )}
         </div>
+        { this.state.isOpen ? 
+          <ModalForm 
+            closeModal={this.closeModal} 
+            isOpen={this.state.isOpen} 
+            handleSubmit={this.handleSubmit}
+            ID = {currentUser.Id}
+          /> 
+          : 
+          null 
+        }
+ 
       </div>
     );
   }

@@ -15,35 +15,27 @@
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: gceme-backend-production
+  name: go-api
 spec:
   replicas: 1
   selector:
       matchLabels:
-          app: gceme
+          app: go-api
           role: backend
           env: production
   template:
     metadata:
       name: backend
       labels:
-        app: gceme
+        app: go-api
         role: backend
         env: production
     spec:
       containers:
       - name: backend
-        image: ../dockerfile
-        resources:
-          limits:
-            memory: "500Mi"
-            cpu: "100m"
-        imagePullPolicy: Always
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 8080
-        command: ["sh", "-c", "app -port=8080"]
+        image: sergiov0011/mytimeapi
+        imagePullPolicy: IfNotPresent
         ports:
         - name: backend
           containerPort: 8080
+

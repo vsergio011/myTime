@@ -1,25 +1,9 @@
 import React, { Component } from 'react';
-import apiService from "../services/tutorial.service";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect
-} from 'react-router-dom'
-import AddTutorial from "./add-tutorial.component";
+import apiService from "../services/tasks.service";
 
+import AddTutorial from "./add-task.component";
 import PropTypes from 'prop-types'
-const Protected = () => <h3>Protected</h3>
-const loginok = false
-function PrivateRoute({ children, ...rest }) {
-  return (
-    <Route {...rest} render={() => {
-      return localStorage.isLogged === 'true'
-        ? children
-        : <Redirect to='/login' />
-    }} />
-  )
-}
+
 
 export default class login extends Component {
     constructor(props) {
@@ -33,6 +17,10 @@ export default class login extends Component {
             password : "",
             email: ""
         };
+      }
+
+      componentDidMount() {
+        localStorage.token = "";
       }
       
       onChangeEmail(e) {
@@ -51,9 +39,7 @@ export default class login extends Component {
       static contextTypes = {
         router: PropTypes.object
       }
-      redirectToTarget = () => {
-        this.context.push('/add')
-      }
+     
       checkUser() {
       
         var data = {
@@ -70,13 +56,14 @@ export default class login extends Component {
             
             console.log("el token "+localStorage.token.length)
             if(localStorage.token.length > 1 ){
-              localStorage.isLogged = 'true'
+              //localStorage.isLogged = 'true'
+              window.location.href = "/users"
             }else{
               localStorage.isLogged = 'false'
             } 
               console.log("el ddf"+localStorage.isLogged)
             
-           // window.location.href = "/protected"
+            
            // console.log("tokle"+response.data.idToken);
             
            
@@ -132,9 +119,7 @@ export default class login extends Component {
         <p className="forgot-password text-right">
             
         </p>
-        <PrivateRoute path='/protected'>
-          <Protected />
-        </PrivateRoute>
+    
     </div>
     
     )
