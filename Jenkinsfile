@@ -1,8 +1,7 @@
 pipeline {
-
   environment {
-    PROJECT = "mytime-299912"
-    APP_NAME = "gceme"
+    PROJECT = "mytime-316618"
+    APP_NAME = "mytimeapi"
     FE_SVC_NAME = "${APP_NAME}-frontend"
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "us-east1-d"
@@ -46,6 +45,7 @@ spec:
     stage('Build and push image with Container Builder') {
       steps {
         container('gcloud') {
+          sh "cd apitasks/"
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
       }
