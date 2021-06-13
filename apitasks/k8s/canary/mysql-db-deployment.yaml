@@ -33,12 +33,7 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql-persistent-storage # This name should match the name specified in `volumes.name`
-            - mountPath: /docker-entrypoint-initdb.d
-              name: initdb
       volumes:                        # A PersistentVolume is mounted as a volume to the Pod  
       - name: mysql-persistent-storage 
         persistentVolumeClaim:
           claimName: mysql-pv-claim
-      - name: initdb
-        configMap:
-        name: initdb-config
