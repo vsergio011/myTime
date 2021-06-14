@@ -2,7 +2,7 @@ pipeline {
   environment {
     PROJECT = "mytime-316618"
     APP_NAME = "mytimeapi"
-    FE_SVC_NAME = "${APP_NAME}-frontend"
+    FE_SVC_NAME = "fullstack-app-mysql" //"${APP_NAME}-frontend"
     CLUSTER = "jenkins-cd"
     CLUSTER_ZONE = "us-east1-d"
     IMAGE_TAG = "gcr.io/${PROJECT}/${APP_NAME}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
