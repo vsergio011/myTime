@@ -90,6 +90,7 @@ spec:
               //sh("export LB_IP=`kubectl get  service/fullstack-mysql \ -o jsonpath='{.status.loadBalancer.ingress[].ip}'` ")
               sh("kubectl get services")
               sh("export LB_IP=`kubectl get  service/fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'`")
+              sh("echo \$LB_IP")
               sh("kubectl set env deployment/fullstack-app-mysql  --overwrite DB_HOST=\$LB_IP")
             }
         }
