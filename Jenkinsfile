@@ -45,9 +45,12 @@ spec:
     stage('Build and push image with Container Builder') {
       steps {
         container('gcloud') {
-          sh "cd apitasks/"
-          sh "ls"
-          sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+          dir("apitasks") {
+            sh "pwd"
+            sh "ls"
+            sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+        
+          }
         }
       }
     }
