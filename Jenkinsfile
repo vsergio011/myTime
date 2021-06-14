@@ -49,7 +49,7 @@ spec:
           dir("apitasks") {
             sh "pwd"
             sh "ls"
-            sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+           // sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         
           }
         }
