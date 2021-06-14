@@ -55,9 +55,9 @@ spec:
         }
       }
     }
-    stage('Deploy Production') {
+    stage('Deploy dev') {
       // Canary branch
-      when { branch 'master' }
+      when { branch 'develop' }
       steps {
         container('kubectl') {
             dir("apitasks") {
