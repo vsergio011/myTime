@@ -46,6 +46,7 @@ spec:
       steps {
         container('gcloud') {
           sh "cd apitasks/"
+          sh "ls"
           sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
       }
