@@ -55,7 +55,25 @@ spec:
         }
       }
     }
-    stage('Deploy Canary') {
+    stage('Deploy Dev') {
+      // Canary branch
+      when { branch 'develop' }
+      steps {
+        container('kubectl') {
+            dir("apitasks") {
+               sh "pwd"
+               sh "ls"
+              // Change deployed image in canary to the one we just built
+              sh("sed -i.bak 's#gcr.io/mytime-316618/mytimeapi:latest#${IMAGE_TAG}#' ./k8s/dev/*.yaml")
+              // step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+              step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/develop', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+              //stablish the service mysql ip
+              sh("export LB_IP=`kubectl get  service/fullstack-mysql \ -o jsonpath='{.status.loadBalancer.ingress[].ip}'` ")
+            }
+        }
+      }
+    }
+    stage('Deploy Production') {
       // Canary branch
       when { branch 'master' }
       steps {
@@ -64,11 +82,11 @@ spec:
                sh "pwd"
                sh "ls"
               // Change deployed image in canary to the one we just built
-              sh("sed -i.bak 's#gcr.io/mytime-316618/mytimeapi:latest#${IMAGE_TAG}#' ./k8s/canary/*.yaml")
+              sh("sed -i.bak 's#gcr.io/mytime-316618/mytimeapi:latest#${IMAGE_TAG}#' ./k8s/prod/*.yaml")
               // step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
-              step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/canary', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
-              sh("echo http://`kubectl --namespace=default get service/${FE_SVC_NAME} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${FE_SVC_NAME}")
-              sh("kubectl get services")
+              step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/production', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+              //stablish the service mysql ip
+              sh("export LB_IP=`kubectl get  service/fullstack-mysql \ -o jsonpath='{.status.loadBalancer.ingress[].ip}'` ")
             }
         }
       }
