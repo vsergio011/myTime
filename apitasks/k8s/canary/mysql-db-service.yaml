@@ -5,7 +5,7 @@ metadata:
   labels:                                # Labels that will be applied to the resource
     app: fullstack-mysql
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 3306
   selector:                              # Selects any Pod with labels `app=fullstack-mysql,tier=mysql`

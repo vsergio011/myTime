@@ -17,6 +17,7 @@ spec:
       labels:                               # labels to be applied to the pods in this deployment 
         app: fullstack-mysql
         tier: mysql
+        env: canary
     spec:                                   # The spec for the containers that will be run inside the Pods in this deployment
       containers:
         - image: mysql:5.7                  # The container image

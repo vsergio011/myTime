@@ -75,7 +75,7 @@ func GetUser(ctx context.Context, uid string) (User, error) {
 	}
 	defer db.Close()
 
-	rows, err := db.Query("SELECT uid,name,surname FROM users where uid = ?", u.UID)
+	rows, err := db.Query("SELECT uid,name,surname FROM myTime.users where uid = 'nnaGlkOw9uPJVrqf1pwppxOSXOc2'")
 	if err != nil {
 		err = errors.New("CANNOT PREPARE STATMENT")
 	}
