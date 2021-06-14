@@ -94,7 +94,8 @@ spec:
              // sh("echo ${LB_IP}")
              // sh("kubectl set env deployment/fullstack-app-mysql  --overwrite DB_HOST=${LB_IP}")
               script{
-                def LB_IP = sh(script: "kubectl get services fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'",returnStdout:true)
+                sh("kubectl get services fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'>lbip.txt")
+                def LB_IP = readFile(file: 'lbip.txt')
                 sh("echo ${LB_IP}")
                 sh("kubectl set env deployment/fullstack-app-mysql  --overwrite DB_HOST=${LB_IP}")
               }
