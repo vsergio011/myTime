@@ -1,21 +1,21 @@
 apiVersion: apps/v1 
 kind: Deployment                                              # Type of the kubernetes resource
 metadata:
-  name: fullstack-app-mysql                                   # Name of the Kubernetes resource
+  name: fullstack-app-mysql-dev                                   # Name of the Kubernetes resource
   labels:
-    app: fullstack-app-mysql
+    app: fullstack-app-mysql-dev
 spec:
   replicas: 1                                                 # Number of pods to run at any given time
   selector:
     matchLabels: 
-      app: fullstack-app-mysql                                # This deployment applies to any Pods matching the specified label
+      app: fullstack-app-mysql-dev                                 # This deployment applies to any Pods matching the specified label
   template:                                                   # This deployment will create a set of pods using the configurations in this template
     metadata:
       labels:                                                 # The labels that will be applied to all of the pods in this deployment
-        app: fullstack-app-mysql                              
+        app: fullstack-app-mysql-dev                               
     spec:                                                     # Spec for the container which will run in the Pod
       containers:
-      - name: fullstack-app-mysql 
+      - name: fullstack-app-mysql-dev 
         image: gcr.io/mytime-316618/mytimeapi:latest                # The image we are getting from dockerhub
         imagePullPolicy: Always                         # If we have not pulled it before, get it from dockerhub
         ports:
