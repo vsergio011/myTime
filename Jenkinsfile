@@ -43,12 +43,14 @@ spec:
 }
   }
   stages {
-    stage('Build and push image with Container Builder') {
+
+    stage('Api tests') {
       steps {
         container('gcloud') {
-          dir("apitasks") {
+          dir("apitasks/routes") {
             sh "pwd"
             sh "ls"
+            sh "go test"
            // sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         
           }
@@ -87,12 +89,8 @@ spec:
               step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/production', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
               //step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services/prod', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
 
-              //sh("export LB_IP=`kubectl get  service/fullstack-mysql \ -o jsonpath='{.status.loadBalancer.ingress[].ip}'` ")
+              //Establezco la ip del servicio mysql de la base de datos a la que se conecta
               sh("kubectl get services")
-              //sh("export LB_IP=`kubectl get  service/fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'`")
-            //   env.LB_IP = sh("kubectl get services fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'")
-             // sh("echo ${LB_IP}")
-             // sh("kubectl set env deployment/fullstack-app-mysql  --overwrite DB_HOST=${LB_IP}")
               script{
                 sh("kubectl get services fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'>lbip.txt")
                 def LB_IP = readFile(file: 'lbip.txt')
