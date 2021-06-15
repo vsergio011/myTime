@@ -48,7 +48,9 @@ spec:
         container('golang') {
           sh """
             ln -s `pwd` ./
-            cd ./apitasks
+            mkdir app
+            move ./apitasks/* app
+            cd ./app
             export GO111MODULE="on"
             go mod download
             go build -o main
