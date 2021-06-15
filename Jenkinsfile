@@ -50,7 +50,6 @@ spec:
             ln -s `pwd` ./
             cd ./apitasks
             export GO111MODULE="on"
-            go mod download 
             cd /routes
             go test
           """
