@@ -43,17 +43,14 @@ spec:
 }
   }
   stages {
-
-    stage('Api tests') {
+    stage('Test') {
       steps {
-        container('gcloud') {
-          dir("apitasks/routes") {
-            sh "pwd"
-            sh "ls"
-            sh "go test"
-           // sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
-        
-          }
+        container('golang') {
+          sh """
+            ln -s `pwd` /go/src/apitasks/routes
+            cd /go/src/apitasks/routes
+            go test
+          """
         }
       }
     }
