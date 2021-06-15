@@ -49,6 +49,8 @@ spec:
           /*sh """
             ln -s `pwd` ./
             cd ./apitasks/routes
+            export GO111MODULE="on"
+            go mod download 
             go test
           """*/
         }

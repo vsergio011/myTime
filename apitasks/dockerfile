@@ -1,8 +1,11 @@
 FROM golang:1.15.6
 
 LABEL maintainer = "Sergio Vera"
+#Carpeta donde se alojara la app en el contenedor
 RUN mkdir /app
+#Añadimos todo el directorio raiz a la carpeta app de nuestro contenedor
 ADD . /app
+#Establecemos el directorio /app como directorio de trabajo
 WORKDIR /app
 RUN export GO111MODULE="on"
 COPY go.mod go.sum ./
@@ -17,5 +20,5 @@ RUN ls
 #RUN go get ./...
 #RUN go run main.go
 
-
+#Arrancamos nuestra aplicacion
 CMD [ "/app/main" ]
