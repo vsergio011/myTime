@@ -47,7 +47,7 @@ spec:
       steps {
         container('golang') {
           sh """
-            ln -s `pwd` ./apitasks/
+            ln -s `pwd` ./
             cd ./apitasks/routes
             go test
           """
