@@ -46,13 +46,14 @@ spec:
     stage('Test') {
       steps {
         container('golang') {
-          /*sh """
+          sh """
             ln -s `pwd` ./
-            cd ./apitasks/routes
+            cd ./apitasks
             export GO111MODULE="on"
             go mod download 
+            cd /routes
             go test
-          """*/
+          """
         }
       }
     }
