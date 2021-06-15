@@ -46,11 +46,11 @@ spec:
     stage('Test') {
       steps {
         container('golang') {
-          sh """
+          /*sh """
             ln -s `pwd` ./
             cd ./apitasks/routes
             go test
-          """
+          """*/
         }
       }
     }
