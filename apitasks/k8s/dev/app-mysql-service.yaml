@@ -10,5 +10,5 @@ spec:
     app: fullstack-app-mysql            # Selects any Pod with labels `app=fullstack-app-mysql`
   ports: 
   - name: http
-    port: 8081
-    targetPort: 8081
+    port: 8080
+    targetPort: 8080
