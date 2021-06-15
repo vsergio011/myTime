@@ -50,7 +50,7 @@ spec:
             ln -s `pwd` ./
             cd ./apitasks
             export GO111MODULE="on"
-            cd /routes
+            cd ./routes
             go test
           """
         }
