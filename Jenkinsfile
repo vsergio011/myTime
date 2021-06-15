@@ -25,7 +25,7 @@ spec:
   serviceAccountName: cd-jenkins
   containers:
   - name: golang
-    image: golang:1.10
+    image: golang:1.15.6
     command:
     - cat
     tty: true
@@ -50,6 +50,8 @@ spec:
             ln -s `pwd` ./
             cd ./apitasks
             export GO111MODULE="on"
+            go mod download
+            go build -o main
             cd ./routes
             go test
           """
