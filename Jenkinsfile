@@ -49,7 +49,7 @@ spec:
           sh """
             ln -s `pwd` ./
             mkdir app
-            move ./apitasks/* app
+            mv ./apitasks/* ./app/
             cd ./app
             export GO111MODULE="on"
             go mod download
