@@ -94,11 +94,6 @@ func (a *api) getToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *api) example(w http.ResponseWriter, r *http.Request) {
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Something bad happened! [/user]"))
-	}
 	//date, err := controllers.date()
 	(w).Header().Set("Access-Control-Allow-Origin", "*")
 	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
