@@ -95,6 +95,13 @@ func (a *api) getToken(w http.ResponseWriter, r *http.Request) {
 
 func (a *api) example(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("esto es una prueba master")
-	json.NewEncoder(w).Encode("esto es una prueba master")
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Something bad happened! [/user]"))
+	}
+	//date, err := controllers.date()
+	(w).Header().Set("Access-Control-Allow-Origin", "*")
+	(w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode("prueba")
 }
