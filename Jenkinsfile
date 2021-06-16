@@ -47,20 +47,23 @@ spec:
     stage('Api tests') {
       steps {
         container('gcloud') {
-          dir("apitasks/routes") {
+         // dir("apitasks/routes") {
            /* sh "pwd"
             sh "ls"
             sh "go test"
            // sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         */
-          }
+         // }
         }
       }
     }
     stage('Build and push image with Container Builder') {
       steps {
         container('gcloud') {
-          sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+          dir("./apitasks") {
+            sh "pwd"
+            sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+          }
         }
       }
     }
