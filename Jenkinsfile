@@ -25,7 +25,7 @@ spec:
   serviceAccountName: cd-jenkins
   containers:
   - name: golang
-    image: golang:1.15.6
+    image: golang:1.10
     command:
     - cat
     tty: true
@@ -43,20 +43,24 @@ spec:
 }
   }
   stages {
-    stage('Test') {
+
+    stage('Api tests') {
       steps {
-        container('golang') {
-          sh """
-            ln -s `pwd` ./
-            mkdir app
-            mv ./apitasks/* ./app/
-            cd ./app
-            export GO111MODULE="on"
-            go mod download
-            go build -o main
-            cd ./routes
-            go test
-          """
+        container('gcloud') {
+          dir("apitasks/routes") {
+           /* sh "pwd"
+            sh "ls"
+            sh "go test"
+           // sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
+        */
+          }
+        }
+      }
+    }
+    stage('Build and push image with Container Builder') {
+      steps {
+        container('gcloud') {
+          sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         }
       }
     }
