@@ -76,10 +76,16 @@ spec:
                sh "ls"
               // Change deployed image in canary to the one we just built
               sh("sed -i.bak 's#gcr.io/mytime-316618/mytimeapi:latest#${IMAGE_TAG}#' ./k8s/dev/*.yaml")
-              // step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
               step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/dev', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+              step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services/dev', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
               //sh("export LB_IP=`kubectl get  service/fullstack-mysql \ -o jsonpath='{.status.loadBalancer.ingress[].ip}'` ")
               sh("kubectl get services")
+              script{
+                sh("kubectl get services fullstack-mysql \\-o jsonpath='{.status.loadBalancer.ingress[].ip}'>lbip.txt")
+                def LB_IP = readFile(file: 'lbip.txt')
+                sh("echo ${LB_IP}")
+                sh("kubectl set env deployment/fullstack-app-mysql  --overwrite DB_HOST=${LB_IP}")
+              }
             }
         }
       }
@@ -94,7 +100,7 @@ spec:
                sh "ls"
               // Change deployed image in canary to the one we just built
               sh("sed -i.bak 's#gcr.io/mytime-316618/mytimeapi:latest#${IMAGE_TAG}#' ./k8s/production/*.yaml")
-              // step([$class: 'KubernetesEngineBuilder', namespace:'production', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
+              
               step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/production', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
               //step([$class: 'KubernetesEngineBuilder', namespace:'default', projectId: env.PROJECT, clusterName: env.CLUSTER, zone: env.CLUSTER_ZONE, manifestPattern: 'k8s/services/prod', credentialsId: env.JENKINS_CRED, verifyDeployments: false])
 
