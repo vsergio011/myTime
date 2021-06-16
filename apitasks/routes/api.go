@@ -70,6 +70,7 @@ func New() Server {
 	//r.HandleFunc("/users/add", signInController).Methods("POST")
 	//rutas de test
 	apiTest := r.PathPrefix("/test").Subrouter()
+	apiTest.HandleFunc("/test", a.example).Methods("get")
 	apiTest.HandleFunc("/users", a.fetchUsers).Methods("get")
 	apiTest.HandleFunc("/user/{ID:[a-zA-Z0-9_]+}", a.fetchUser).Methods("get")
 	apiTest.HandleFunc("/rmuser/{ID:[a-zA-Z0-9_]+}", a.removeUser).Methods("get")

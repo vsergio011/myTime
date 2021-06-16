@@ -49,7 +49,6 @@ spec:
         container('gcloud') {
          // dir("apitasks/routes") {
            /* sh "pwd"
-            sh "ls"
             sh "go test"
            // sh "PYTHONUNBUFFERED=1 gcloud builds submit -t ${IMAGE_TAG} ."
         */

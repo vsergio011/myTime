@@ -92,3 +92,9 @@ func (a *api) getToken(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(data)
 }
+
+func (a *api) example(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("esto es una prueba master")
+	json.NewEncoder(w).Encode("esto es una prueba master")
+}
